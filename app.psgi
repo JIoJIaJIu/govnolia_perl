@@ -1,5 +1,14 @@
+use Plack::Builder;
+
+use Govnolia::Router;
 
 my $app = sub {
     my $env = shift;
-    return [200, ['Content-type' => 'text/plain'], ['Hello world']];
-}
+    my $router = Govnolia::Router->new($env->{'psgix.logger'});
+    return $router->match($env);
+};
+
+builder {
+    enable "SimpleLogger", level => "debug";
+    $app;
+};
