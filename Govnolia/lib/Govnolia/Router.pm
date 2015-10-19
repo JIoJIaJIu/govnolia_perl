@@ -3,6 +3,7 @@ package Govnolia::Router;
 use strict;
 use warnings;
 
+use Log::Any qw($log);
 use Module::Load;
 use Router::Simple;
 
@@ -16,15 +17,13 @@ my %controllers = (
 
 sub new {
     my $cls = shift;
-    my $log = shift;
     my $self = {
         router => Router::Simple->new(),
     };
     bless($self, $cls);
 
-    $log->({ level => "debug", message => "New route" });
     for my $path (keys %controllers) {
-        $log->({ level => "debug", message => "New route $path" });
+        $log->debug("New route $path");
         $self->{'router'}->connect($path, $controllers{$path});
     };
 
@@ -37,7 +36,7 @@ sub match {
     
     if (my $controller = $self->{'router'}->match($env)) {
         my $module = "Govnolia::Controllers::$controller->{'name'}";
-        $env->{'psgix.logger'}->({ level => "debug", message => "Founded controller $module"});
+        $log->debug("Founded controller $module");
         load $module;
         return $module->response($env); 
     }

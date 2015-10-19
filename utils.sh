@@ -9,11 +9,13 @@ for i in $@; do
             cpanm .
             cd $CWD 
             ;;
-        --restart)
+        --server)
             ./utils.sh --modules
             echo "Restarting server.."
             pkill plackup
             PLACK_ENV=development plackup -D --access-log=`pwd .`/access_log 2>&1
+            ;;
+        --db)
             ;;
     esac
 done
