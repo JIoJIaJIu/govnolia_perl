@@ -10,7 +10,7 @@ my $router = Govnolia::Router->new();
 
 my $app = sub {
     my $env = shift;
-    $log->debug("Request $env");
+    $log->debugf("Request %s", $env);
     return $router->match($env);
 };
 
